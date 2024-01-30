@@ -1,5 +1,5 @@
 [package]
-name = "notary-server"
+name = "sgx-notary-server"
 version = "0.1.0-alpha.3"
 edition = "2021"
 
@@ -31,8 +31,8 @@ serde_yaml = "0.9.21"
 sha1 = "0.10"
 structopt = "0.3.26"
 thiserror = "1"
-tlsn-verifier = { path = "/Users/rpm/github/tlsn/tlsn/tlsn-verifier" }
-tlsn-tls-core = { path = "/Users/rpm/github/tlsn/components/tls/tls-core" }
+tlsn-verifier = { git = "https://github.com/tlsnotary/tlsn", rev = "ee17919" }
+tlsn-tls-core = { git = "https://github.com/tlsnotary/tlsn", rev = "ee17919" }
 tokio = { version = "1", features = ["full"] }
 tokio-rustls = { version = "0.24.1" }
 tokio-util = { version = "0.7", features = ["compat"] }
@@ -47,7 +47,7 @@ ws_stream_tungstenite = { version = "0.10.0", features = ["tokio_io"] }
 [dev-dependencies]
 # specify vendored feature to use statically linked copy of OpenSSL
 hyper-tls = { version = "0.5.0", features = ["vendored"] }
-tls-server-fixture = { path = "/Users/rpm/github/tlsn/components/tls/tls-server-fixture" }
-tlsn-prover = { path = "/Users/rpm/github/tlsn/tlsn/tlsn-prover" }
+tls-server-fixture = { git = "https://github.com/tlsnotary/tlsn", rev = "ee17919" }
+tlsn-prover = { git = "https://github.com/tlsnotary/tlsn", rev = "ee17919" }
 tokio-native-tls = { version = "0.3.1", features = ["vendored"] }
 

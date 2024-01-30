@@ -3,12 +3,12 @@
 
 ARCH_LIBDIR ?= /lib/$(shell $(CC) -dumpmachine)
 
-SELF_EXE = target/release/rust-hyper-http-server
+SELF_EXE = target/release/sgx-notary-server
 
 .PHONY: all
-all: $(SELF_EXE) rust-hyper-http-server.manifest
+all: $(SELF_EXE) sgx-notary-server.manifest
 ifeq ($(SGX),1)
-all: rust-hyper-http-server.manifest.sgx rust-hyper-http-server.sig
+all: sgx-notary-server.manifest.sgx sgx-notary-server.sig
 endif
 
 ifeq ($(DEBUG),1)
@@ -25,7 +25,7 @@ endif
 $(SELF_EXE): Cargo.toml
 	cargo build --release
 
-rust-hyper-http-server.manifest: rust-hyper-http-server.manifest.template
+sgx-notary-server.manifest: sgx-notary-server.manifest.template
 	gramine-manifest \
 		-Dlog_level=$(GRAMINE_LOG_LEVEL) \
 		-Darch_libdir=$(ARCH_LIBDIR) \
@@ -34,11 +34,11 @@ rust-hyper-http-server.manifest: rust-hyper-http-server.manifest.template
 
 # Make on Ubuntu <= 20.04 doesn't support "Rules with Grouped Targets" (`&:`),
 # see the helloworld example for details on this workaround.
-rust-hyper-http-server.manifest.sgx rust-hyper-http-server.sig: sgx_sign
+sgx-notary-server.manifest.sgx sgx-notary-server.sig: sgx_sign
 	@:
 
 .INTERMEDIATE: sgx_sign
-sgx_sign: rust-hyper-http-server.manifest $(SELF_EXE)
+sgx_sign: sgx-notary-server.manifest $(SELF_EXE)
 	gramine-sgx-sign \
 		--manifest $< \
 		--output $<.sgx
@@ -51,7 +51,7 @@ endif
 
 .PHONY: start-gramine-server
 start-gramine-server: all
-	$(GRAMINE) rust-hyper-http-server
+	$(GRAMINE) sgx-notary-server
 
 .PHONY: clean
 clean:

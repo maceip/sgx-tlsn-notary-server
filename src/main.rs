@@ -2,7 +2,7 @@ use eyre::{eyre, Result};
 use structopt::StructOpt;
 use tracing::debug;
 
-use notary_server::{
+use sgx_notary_server::{
     init_tracing, parse_config_file, run_server, CliFields, NotaryServerError,
     NotaryServerProperties,
 };

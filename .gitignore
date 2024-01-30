@@ -2,3 +2,4 @@
 /OUTPUT
 /result-*
 /Cargo.lock
+*.manifest
