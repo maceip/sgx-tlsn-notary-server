@@ -52,7 +52,6 @@ endif
 .PHONY: start-gramine-server
 start-gramine-server: all
 	$(GRAMINE) sgx-notary-server
-
 .PHONY: clean
 clean:
 	$(RM) -rf *.token *.sig *.manifest.sgx *.manifest result-* OUTPUT
