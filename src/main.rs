@@ -15,6 +15,8 @@ async fn main() -> Result<(), NotaryServerError> {
     // Load command line arguments which contains the config file location
 
     let cli_fields: CliFields = CliFields::from_args();
+
+    /// gramine uses p384 sec1; we have to convert it so tlsn is happy:
     let eph = fs::read("/tmp/key.pem").await.expect("gramine key not found");
     let pl = EcKey::private_key_from_pem(&eph).expect("s");
     let pkey = PKey::from_ec_key(pl.clone()).expect("ss");
