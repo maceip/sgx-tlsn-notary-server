@@ -4,44 +4,64 @@
 # Rust manifest example
 
 loader.entrypoint = "file:{{ gramine.libos }}"
-libos.entrypoint = "{{ self_exe }}"
+loader.argv = [
+  "gramine-ratls", "/tmp/crt.pem", "/tmp/key.pem", "--",
+    "/home/ecs-user/sgx-tlsn-notary-server/target/release/sgx-notary-server", "--config-file", "config/config.yaml",
+]
+
+libos.entrypoint = "/gramine-ratls"
+
 loader.log_level = "{{ log_level }}"
 
 loader.env.LD_LIBRARY_PATH = "/lib:{{ arch_libdir }}"
 
-# See https://gramine.readthedocs.io/en/stable/performance.html#glibc-malloc-tuning
-loader.env.MALLOC_ARENA_MAX = "1"
+loader.uid = 65534
+loader.gid = 65534
+
 
 # For easier debugging — not strictly required to run this workload
 loader.env.RUST_BACKTRACE = "full"
 
 fs.mounts = [
+  { path = "/gramine-ratls", uri = "file:{{ entrypoint }}" },
   { path = "/lib", uri = "file:{{ gramine.runtimedir() }}" },
+  { path = "/home/ecs-user/sgx-tlsn-notary-server/target/release", uri = "file:/home/ecs-user/sgx-tlsn-notary-server/target/release"},
   { path = "{{ arch_libdir }}", uri = "file:{{ arch_libdir }}" },
+  { path = "/tmp", type = "tmpfs" },
+
+
 ]
 
-sgx.debug = true
 sgx.edmm_enable = {{ 'true' if env.get('EDMM', '0') == '1' else 'false' }}
 sgx.remote_attestation = "dcap"
 
-	
+sys.enable_sigterm_injection = true	
+
+sgx.allowed_files = [
+"file:/home/ecs-user/sgx-tlsn-notary-server/fixture/pkcs8.pem",
+"file:/home/ecs-user/sgx-tlsn-notary-server/fixture/maybe.cert.pem",
+]
 
 sgx.trusted_files = [
   "file:{{ gramine.libos }}",
+  "file:{{ entrypoint }}",
   "file:{{ self_exe }}",
   "file:{{ gramine.runtimedir() }}/",
   "file:{{ arch_libdir }}/",
   "file:config/config.yaml",
   "file:fixture/notary/notary.key",
+    "file:/usr/bin/gramine-ratls",
+  "file:/tmp/crt.pem",
   "file:fixture/notary/notary.pub",
   "file:fixture/auth/whitelist.csv",
   "file:fixture/tls/notary.crt",
   "file:fixture/tls/notary.csr",
-  "file:fixture/tls/notary.key",
   "file:fixture/tls/notary.ext",
+  "file:fixture/tls/pkcs8.pem",
   "file:fixture/tls/rootCA.crt",
   "file:fixture/tls/rootCA.key",
-  "file:fixture/tls/rootCA.srl"
+  "file:fixture/tls/rootCA.srl",
+"file:/home/ecs-user/sgx-tlsn-notary-server/target/release/sgx-notary-server",
 ]
 
 # The Tokio runtime requires eventfd, and the Gramine implementation
@@ -57,4 +77,4 @@ sys.insecure__allow_eventfd = true
 # - any threads and threadpools you might be starting
 # - helper threads internal to Gramine — see:
 #   https://gramine.readthedocs.io/en/stable/manifest-syntax.html#number-of-threads
-sgx.max_threads = {{ '1' if env.get('EDMM', '0') == '1' else '8' }}
+sgx.max_threads = {{ '2' if env.get('EDMM', '0') == '1' else '8' }}
