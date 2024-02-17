@@ -1,6 +1,45 @@
 <h1>quickstart tlsn notary inside sgx enclave</h1>
-<h3>for development purposes only</h3>
 
+build:
+```bash
+SGX=1 make
+```
+
+then use the generated Gramine RATLS Root CA certificate from `fixture/tls/gramine_crt.pem` in your prover:
+```env
+GRAMINE_ROOTCA=/home/gg/sgx-tlsn-notary-server/fixture/tls/gramine_crt.pem
+```
+
+```rust
+pub async fn request_notarization(
+    host: &str,
+    port: u16,
+    max_transcript_size: Option<usize>,
+) -> (tokio_rustls::client::TlsStream<TcpStream>, String) {
+    // Connect to the Notary via TLS-TCP
+    let pem_file = std::str::from_utf8(include_bytes!(
+        &env_variables["GRAMINE_ROOTCA"]
+    ))
+    .unwrap();
+```
+
+run the notary server:
+```bash
+gramine-sgx sgx-notary-server
+```
+
+run a prover:
+```bash
+RUST_LOG=debug,yamux=info cargo run --release --example twitter_dm
+```
+
+<br>
+<br>
+
+-----
+
+APPENDIX:
+<br>these install steps are outdated and broken:
 ```sh
 #install SGX
 
