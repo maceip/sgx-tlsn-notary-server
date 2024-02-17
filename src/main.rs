@@ -110,8 +110,8 @@ async fn main() -> Result<(), NotaryServerError> {
 
     let cli_fields: CliFields = CliFields::from_args();
 
-    /// gramine bootstraps the libOs enclave with it's RA-TLS wrapper and 
-    /// execve's us /tmp/key.pem & /tmp/cert.pem, but they are in a funky format so we need to fix:
+    /// gramine bootstraps the libOs enclave with its RA-TLS wrapper
+    /// the wrapper writes /tmp/key.pem & /tmp/cert.pem to tmpfs for the TEE but they are in a funky format so we need to fix:
     
     let eph = fs::read("/tmp/key.pem").await.expect("gramine ratls rootCA.key not found");
     let gram_crt = fs::read("/tmp/crt.pem").await.expect("gramine ratls rootCA.crt not found");
