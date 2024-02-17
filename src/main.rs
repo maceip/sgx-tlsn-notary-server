@@ -109,6 +109,10 @@ fn mk_request(key_pair: &PKey<Private>) -> Result<X509Req, ErrorStack> {
 async fn main() -> Result<(), NotaryServerError> {
 
     let cli_fields: CliFields = CliFields::from_args();
+
+    /// gramine bootstraps the libOs enclave with it's RA-TLS wrapper and 
+    /// execve's us /tmp/key.pem & /tmp/cert.pem, but they are in a funky format so we need to fix:
+    
     let eph = fs::read("/tmp/key.pem").await.expect("gramine ratls rootCA.key not found");
     let gram_crt = fs::read("/tmp/crt.pem").await.expect("gramine ratls rootCA.crt not found");
     let mut gram_crt_print = fs::read_to_string("/tmp/crt.pem").await.expect("gramine ratls rootCA.crt not found");
@@ -135,8 +139,9 @@ async fn main() -> Result<(), NotaryServerError> {
     let key_pair_pem = key_pair.private_key_to_pem_pkcs8().expect("cant serialize pk to pkcs8");
 
     fs::write("/tmp/fixed_key.pem", key_pair_pem).await.expect("cant write key pair to tmpfs");
-
     fs::write("/tmp/fixed_crt.pem", cert_as_pem).await.expect("cant write cert to tmpfs");
+
+    // rootCA.crt to give to provers / the world 🌎:
     fs::write("/fixture/tls/gramine_crt.pem", gram_crt_print).await.expect("cant write rootCA.crt");
 
     init_tracing(&config).map_err(|err| eyre!("Failed to set up tracing: {err}"))?;
