@@ -27,9 +27,10 @@ $(SELF_EXE): Cargo.toml
 
 sgx-notary-server.manifest: sgx-notary-server.manifest.template
 	gramine-manifest \
+		-Dentrypoint=$$(command -v gramine-ratls) \
 		-Dlog_level=$(GRAMINE_LOG_LEVEL) \
 		-Darch_libdir=$(ARCH_LIBDIR) \
-		-Dself_exe=$(SELF_EXE) \
+                -Dself_exe=$(SELF_EXE) \
 		$< $@
 
 # Make on Ubuntu <= 20.04 doesn't support "Rules with Grouped Targets" (`&:`),
