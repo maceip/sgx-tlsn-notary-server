@@ -5,7 +5,7 @@ argv = [
     "/tmp/crt.pem",
     "/tmp/key.pem",
     "--",
-    "/home/ecs-user/sgx-tlsn-notary-server/target/release/sgx-notary-server",
+    "target/release/sgx-notary-server",
     "--config-file",
     "config/config.yaml",
 ]
@@ -20,39 +20,27 @@ RUST_BACKTRACE = "full"
 [libos]
 entrypoint = "/gramine-ratls"
 
-[[fs.mounts]]
-path = "/gramine-ratls"
-uri = "file:/usr/bin/gramine-ratls"
-
-[[fs.mounts]]
-path = "/lib"
-uri = "file:/usr/lib/x86_64-linux-gnu/gramine/runtime/glibc"
-
-[[fs.mounts]]
-path = "/home/ecs-user/sgx-tlsn-notary-server/target/release"
-uri = "file:/home/ecs-user/sgx-tlsn-notary-server/target/release"
-
-[[fs.mounts]]
-path = "/lib/x86_64-linux-gnu"
-uri = "file:/lib/x86_64-linux-gnu"
-
-[[fs.mounts]]
-path = "/tmp"
-type = "tmpfs"
+[fs]
+mounts = [
+    { path = "/gramine-ratls", uri = "file:/usr/bin/gramine-ratls" },
+    { path = "/fixture", uri = "file:fixture" },
+    { path = "/lib", uri = "file:/usr/lib/x86_64-linux-gnu/gramine/runtime/glibc" },
+    { path = "/lib/x86_64-linux-gnu", uri = "file:/lib/x86_64-linux-gnu" },
+    { path = "/tmp", type = "tmpfs" },
+]
 
 [sgx]
-edmm_enable = false
+edmm_enable = true
 remote_attestation = "dcap"
 allowed_files = [
-    "file:/home/ecs-user/sgx-tlsn-notary-server/fixture/pkcs8.pem",
-    "file:/home/ecs-user/sgx-tlsn-notary-server/fixture/maybe.cert.pem",
+    "file:fixture/tls",
 ]
-max_threads = 8
+max_threads = 32
 isvprodid = 0
 isvsvn = 0
 debug = false
 enable_stats = false
-enclave_size = "256M"
+enclave_size = "1024G"
 use_exinfo = false
 
 [[sgx.trusted_files]]
@@ -65,7 +53,7 @@ sha256 = "4e9358b580960c2cfacf86b1e7585cb90b60b1b36d47a34e5696b2c0915cbca4"
 
 [[sgx.trusted_files]]
 uri = "file:target/release/sgx-notary-server"
-sha256 = "2bcd7e9526d6d9e3c8c6377d56732668e0e5c09d8d7612273a85c16b2fef73ed"
+sha256 = "d364a44c7bb4a4652f2e80e4bb7c92820d43d781b07ef16ab00da3cbe589f0ad"
 
 [[sgx.trusted_files]]
 uri = "file:/usr/lib/x86_64-linux-gnu/gramine/runtime/glibc/crt1.o"
@@ -4244,6 +4232,30 @@ uri = "file:/lib/x86_64-linux-gnu/libLLVM-14.so.1"
 sha256 = "ccce431f05a3d35ef57db281637506c793731c5b7ca08c7e0f6a7b5d5fdc97c7"
 
 [[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libLLVM-17.0.6.so.1"
+sha256 = "ea4b74072fdd895a63c3356e034f21f22e2fe7858545f2c5aaa22f05683f4657"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libLLVM-17.so"
+sha256 = "ea4b74072fdd895a63c3356e034f21f22e2fe7858545f2c5aaa22f05683f4657"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libLLVM-17.so.1"
+sha256 = "ea4b74072fdd895a63c3356e034f21f22e2fe7858545f2c5aaa22f05683f4657"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libLLVM-18.1.0.so.1"
+sha256 = "209cfb0d1dd725fbb0173ba9d72ac7851703b4f0bee51bb413251ac6f54870ac"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libLLVM-18.so"
+sha256 = "209cfb0d1dd725fbb0173ba9d72ac7851703b4f0bee51bb413251ac6f54870ac"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libLLVM-18.so.1"
+sha256 = "209cfb0d1dd725fbb0173ba9d72ac7851703b4f0bee51bb413251ac6f54870ac"
+
+[[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libX11.so.6"
 sha256 = "34b7869a1ba702462a1aa862fc0afe5b2608a7d5a09552c07796802fcf0c684b"
 
@@ -4292,12 +4304,500 @@ uri = "file:/lib/x86_64-linux-gnu/libXpm.so.4.11.0"
 sha256 = "a91733758f9589f38a29533c5dbf0216b1b00cc74e4f91eec3690afa31783db3"
 
 [[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_bad_any_cast_impl.so.20210324"
+sha256 = "a09b7b104ac0babdf503c053327e4d9638338ce9938bf7d5178de9c6e185dc97"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_bad_any_cast_impl.so.20210324.0.0"
+sha256 = "a09b7b104ac0babdf503c053327e4d9638338ce9938bf7d5178de9c6e185dc97"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_bad_optional_access.so.20210324"
+sha256 = "fe3df41ba81faa526c8434e8a0b0d43404af5ac08d74d196a2ab33c0ed18da3e"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_bad_optional_access.so.20210324.0.0"
+sha256 = "fe3df41ba81faa526c8434e8a0b0d43404af5ac08d74d196a2ab33c0ed18da3e"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_bad_variant_access.so.20210324"
+sha256 = "13288ed466e9a184d03c3bb835357d63e346494e958c2995357351b823403839"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_bad_variant_access.so.20210324.0.0"
+sha256 = "13288ed466e9a184d03c3bb835357d63e346494e958c2995357351b823403839"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_base.so.20210324"
+sha256 = "621423923e9128495accc3302a34cebf14e054c6db2859e8ec75831e823570d7"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_base.so.20210324.0.0"
+sha256 = "621423923e9128495accc3302a34cebf14e054c6db2859e8ec75831e823570d7"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_city.so.20210324"
+sha256 = "273b6649648a337e1bd9bc63a33f84d04170f0501de1fe75a4ca0c2f22762afa"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_city.so.20210324.0.0"
+sha256 = "273b6649648a337e1bd9bc63a33f84d04170f0501de1fe75a4ca0c2f22762afa"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_civil_time.so.20210324"
+sha256 = "911abd1d724151001953b1cd2c437174ceffbfa2af50fc640453d374a5d5eb0c"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_civil_time.so.20210324.0.0"
+sha256 = "911abd1d724151001953b1cd2c437174ceffbfa2af50fc640453d374a5d5eb0c"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_cord.so.20210324"
+sha256 = "e4c0fbd52b8283425f24bb8dc47cec7d87278bf372754c726f2e78a23da82b0e"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_cord.so.20210324.0.0"
+sha256 = "e4c0fbd52b8283425f24bb8dc47cec7d87278bf372754c726f2e78a23da82b0e"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_debugging_internal.so.20210324"
+sha256 = "b58feb9ef7bf6ca4f3c2acae3b869ad1da9958895b907e520fb72136354b1147"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_debugging_internal.so.20210324.0.0"
+sha256 = "b58feb9ef7bf6ca4f3c2acae3b869ad1da9958895b907e520fb72136354b1147"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_demangle_internal.so.20210324"
+sha256 = "1c2d71688ce00ebfe572c1e486cda1e2c0d2318ba99c657bf841372f96fbf54f"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_demangle_internal.so.20210324.0.0"
+sha256 = "1c2d71688ce00ebfe572c1e486cda1e2c0d2318ba99c657bf841372f96fbf54f"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_examine_stack.so.20210324"
+sha256 = "113171ec9b80a9d33149220cac1872b45d122b230a9e69cee4a3b81d4b075be6"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_examine_stack.so.20210324.0.0"
+sha256 = "113171ec9b80a9d33149220cac1872b45d122b230a9e69cee4a3b81d4b075be6"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_exponential_biased.so.20210324"
+sha256 = "352b8b6bddb5cba29a615681a6e68809e5554f66ac473fa70b41971a884c3703"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_exponential_biased.so.20210324.0.0"
+sha256 = "352b8b6bddb5cba29a615681a6e68809e5554f66ac473fa70b41971a884c3703"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_failure_signal_handler.so.20210324"
+sha256 = "722c6dc69fe40e310599a735657ff019252748e943595361c9915b40b675af8f"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_failure_signal_handler.so.20210324.0.0"
+sha256 = "722c6dc69fe40e310599a735657ff019252748e943595361c9915b40b675af8f"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_commandlineflag.so.20210324"
+sha256 = "f84f51bea23f74a1877b58c4d3b383c02d796c891b6ec28f7dd90eefd935a1bb"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_commandlineflag.so.20210324.0.0"
+sha256 = "f84f51bea23f74a1877b58c4d3b383c02d796c891b6ec28f7dd90eefd935a1bb"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_commandlineflag_internal.so.20210324"
+sha256 = "dba8ca1f2a694e0e995c41a67ed5b343c62d3d2c6014dead441864d5b5becd9f"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_commandlineflag_internal.so.20210324.0.0"
+sha256 = "dba8ca1f2a694e0e995c41a67ed5b343c62d3d2c6014dead441864d5b5becd9f"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_config.so.20210324"
+sha256 = "25dc77d3aa576f8239c5cee6c545e30c23e5a3fe25d804f6c3b4fe4b73fc6aff"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_config.so.20210324.0.0"
+sha256 = "25dc77d3aa576f8239c5cee6c545e30c23e5a3fe25d804f6c3b4fe4b73fc6aff"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_internal.so.20210324"
+sha256 = "5030a80bd0e94578087ac94eeafb36f3ffd8bba873afd8f06059a4a55e86734a"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_internal.so.20210324.0.0"
+sha256 = "5030a80bd0e94578087ac94eeafb36f3ffd8bba873afd8f06059a4a55e86734a"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_marshalling.so.20210324"
+sha256 = "25e8415da2a953d6fcf4c11291594c27d8a26d89fe2ab8b965beaeaf3ab451b9"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_marshalling.so.20210324.0.0"
+sha256 = "25e8415da2a953d6fcf4c11291594c27d8a26d89fe2ab8b965beaeaf3ab451b9"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_parse.so.20210324"
+sha256 = "21dd9fa79d2e6b08af367e2ca903aad911b721ed84f5bbd74cd67d771fba9373"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_parse.so.20210324.0.0"
+sha256 = "21dd9fa79d2e6b08af367e2ca903aad911b721ed84f5bbd74cd67d771fba9373"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_private_handle_accessor.so.20210324"
+sha256 = "bbbfd9ed3f573e587eadd726c6f6f8a5b526d5409d8bbaad59b0953e9e9860e5"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_private_handle_accessor.so.20210324.0.0"
+sha256 = "bbbfd9ed3f573e587eadd726c6f6f8a5b526d5409d8bbaad59b0953e9e9860e5"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_program_name.so.20210324"
+sha256 = "ddf3b74e549caca98a56762ed1bdfe534b448ecbe7e80ff51f27294acdf435c9"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_program_name.so.20210324.0.0"
+sha256 = "ddf3b74e549caca98a56762ed1bdfe534b448ecbe7e80ff51f27294acdf435c9"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_reflection.so.20210324"
+sha256 = "04605152bc461eb97e4ca790a65c8e95ee873320412f0201b75d9bea3f6d2efc"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_reflection.so.20210324.0.0"
+sha256 = "04605152bc461eb97e4ca790a65c8e95ee873320412f0201b75d9bea3f6d2efc"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_usage.so.20210324"
+sha256 = "85ad8865ad45774b86cb0014da92a7a763f3779a1994b65dcf6920e42c15f103"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_usage.so.20210324.0.0"
+sha256 = "85ad8865ad45774b86cb0014da92a7a763f3779a1994b65dcf6920e42c15f103"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_usage_internal.so.20210324"
+sha256 = "9d35c4d9c4e6ed223dda8cafc6d8044c8687e18e94a5f3c74d15b6bc7ab4fd95"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_flags_usage_internal.so.20210324.0.0"
+sha256 = "9d35c4d9c4e6ed223dda8cafc6d8044c8687e18e94a5f3c74d15b6bc7ab4fd95"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_graphcycles_internal.so.20210324"
+sha256 = "6926a9219364b0d90a84ef5ef3bbc53251c5564839838f85c5326db1aa117416"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_graphcycles_internal.so.20210324.0.0"
+sha256 = "6926a9219364b0d90a84ef5ef3bbc53251c5564839838f85c5326db1aa117416"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_hash.so.20210324"
+sha256 = "4d03ac7a0b518da918a5c33de0d5e4cb5a38b8c29d4a6937e83b60fc0d129f22"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_hash.so.20210324.0.0"
+sha256 = "4d03ac7a0b518da918a5c33de0d5e4cb5a38b8c29d4a6937e83b60fc0d129f22"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_hashtablez_sampler.so.20210324"
+sha256 = "becbfece63fc7118326566accfa5c65201233356834832d11096fc8b41213818"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_hashtablez_sampler.so.20210324.0.0"
+sha256 = "becbfece63fc7118326566accfa5c65201233356834832d11096fc8b41213818"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_int128.so.20210324"
+sha256 = "db90418f6e52c25b03196fdfb465055da36cc1ed9acd2166c44b275575c2a64f"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_int128.so.20210324.0.0"
+sha256 = "db90418f6e52c25b03196fdfb465055da36cc1ed9acd2166c44b275575c2a64f"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_leak_check.so.20210324"
+sha256 = "2da449d4af582cf0cbc52eea42d663c1ff716101ff4133043464a270f51f9a0a"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_leak_check.so.20210324.0.0"
+sha256 = "2da449d4af582cf0cbc52eea42d663c1ff716101ff4133043464a270f51f9a0a"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_leak_check_disable.so.20210324"
+sha256 = "08c313fa8b79072d55e5fd0a1ec3770ec4a23f6fee1f67d89bc0d2160ba730c3"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_leak_check_disable.so.20210324.0.0"
+sha256 = "08c313fa8b79072d55e5fd0a1ec3770ec4a23f6fee1f67d89bc0d2160ba730c3"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_log_severity.so.20210324"
+sha256 = "bcf6cf6b6047875aa96a401b5a6e2b25bb21a82d6180d8e7bb5cefbce57bd16c"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_log_severity.so.20210324.0.0"
+sha256 = "bcf6cf6b6047875aa96a401b5a6e2b25bb21a82d6180d8e7bb5cefbce57bd16c"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_malloc_internal.so.20210324"
+sha256 = "21d749136627201fe3acbd8e6d9f17210cdb7f5b2d0b115432b4175d4c83932a"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_malloc_internal.so.20210324.0.0"
+sha256 = "21d749136627201fe3acbd8e6d9f17210cdb7f5b2d0b115432b4175d4c83932a"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_periodic_sampler.so.20210324"
+sha256 = "72e6e9e2e0f56b8d0682c9ed9be3d64d0eb2ba0951f942174224d307dc35ab66"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_periodic_sampler.so.20210324.0.0"
+sha256 = "72e6e9e2e0f56b8d0682c9ed9be3d64d0eb2ba0951f942174224d307dc35ab66"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_distributions.so.20210324"
+sha256 = "8537d51d580aeefcd7d7e1e062c95dcb06adbb099cdc23273509389cb41b1924"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_distributions.so.20210324.0.0"
+sha256 = "8537d51d580aeefcd7d7e1e062c95dcb06adbb099cdc23273509389cb41b1924"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_internal_distribution_test_util.so.20210324"
+sha256 = "280c109bc8bedbdec5b179058b1fbdaacac6acd414f2df25dc1b3b108fae8535"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_internal_distribution_test_util.so.20210324.0.0"
+sha256 = "280c109bc8bedbdec5b179058b1fbdaacac6acd414f2df25dc1b3b108fae8535"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_internal_platform.so.20210324"
+sha256 = "39d7d4561fdb485d564935769405048f38836f34044c96352baa07dec77a2d99"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_internal_platform.so.20210324.0.0"
+sha256 = "39d7d4561fdb485d564935769405048f38836f34044c96352baa07dec77a2d99"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_internal_pool_urbg.so.20210324"
+sha256 = "4e38cefb4d2e2a62ba74a6b2df46e22ce0a5c9294e298eed27fd5cacb900105e"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_internal_pool_urbg.so.20210324.0.0"
+sha256 = "4e38cefb4d2e2a62ba74a6b2df46e22ce0a5c9294e298eed27fd5cacb900105e"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_internal_randen.so.20210324"
+sha256 = "a53dfffd56eda887c816a481cfef57526f53cff0373f88adc8e3285f1127024e"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_internal_randen.so.20210324.0.0"
+sha256 = "a53dfffd56eda887c816a481cfef57526f53cff0373f88adc8e3285f1127024e"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_internal_randen_hwaes.so.20210324"
+sha256 = "3fcee03d34657a407bed0ff0352657bb03d39bd86bf98c462ae2e86277a9e4a6"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_internal_randen_hwaes.so.20210324.0.0"
+sha256 = "3fcee03d34657a407bed0ff0352657bb03d39bd86bf98c462ae2e86277a9e4a6"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_internal_randen_hwaes_impl.so.20210324"
+sha256 = "110853332e76e92220042fb827499fa4d9aeac9eb7c75f8b59a3080d2488155f"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_internal_randen_hwaes_impl.so.20210324.0.0"
+sha256 = "110853332e76e92220042fb827499fa4d9aeac9eb7c75f8b59a3080d2488155f"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_internal_randen_slow.so.20210324"
+sha256 = "9633152c21f6cefbba73282688a1b7586cc8665f0a059096b0c5876dac67e6b1"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_internal_randen_slow.so.20210324.0.0"
+sha256 = "9633152c21f6cefbba73282688a1b7586cc8665f0a059096b0c5876dac67e6b1"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_internal_seed_material.so.20210324"
+sha256 = "dd072a05640139d1726bdb30d86b1452ae29623f207298b48ee26c81ac085cd6"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_internal_seed_material.so.20210324.0.0"
+sha256 = "dd072a05640139d1726bdb30d86b1452ae29623f207298b48ee26c81ac085cd6"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_seed_gen_exception.so.20210324"
+sha256 = "506ec5df85f3542a888d2c3f0c15ca5ea1f1bd59fdb1fd49d59ff444ca5e2473"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_seed_gen_exception.so.20210324.0.0"
+sha256 = "506ec5df85f3542a888d2c3f0c15ca5ea1f1bd59fdb1fd49d59ff444ca5e2473"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_seed_sequences.so.20210324"
+sha256 = "38fd2b87ae0163d499b06226eee4153f2212228d5a3944104697c6ab256304f2"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_random_seed_sequences.so.20210324.0.0"
+sha256 = "38fd2b87ae0163d499b06226eee4153f2212228d5a3944104697c6ab256304f2"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_raw_hash_set.so.20210324"
+sha256 = "99923a6a49d8d6cab983169975e9f21db39d81eb9edad83c62d9e54493a86c6b"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_raw_hash_set.so.20210324.0.0"
+sha256 = "99923a6a49d8d6cab983169975e9f21db39d81eb9edad83c62d9e54493a86c6b"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_raw_logging_internal.so.20210324"
+sha256 = "ab195387b55df5b681d2c4c382b968ac45e7e3f9099e2bb37eff580dff703efe"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_raw_logging_internal.so.20210324.0.0"
+sha256 = "ab195387b55df5b681d2c4c382b968ac45e7e3f9099e2bb37eff580dff703efe"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_scoped_set_env.so.20210324"
+sha256 = "92d5ab7343fceb8245e71f50b7dd515df17773f7677f405de9147b1705b2a6d0"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_scoped_set_env.so.20210324.0.0"
+sha256 = "92d5ab7343fceb8245e71f50b7dd515df17773f7677f405de9147b1705b2a6d0"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_spinlock_wait.so.20210324"
+sha256 = "b4a43e300c1a087a524a7eb38788be25a9b04aef181c937ad27778aac58760bf"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_spinlock_wait.so.20210324.0.0"
+sha256 = "b4a43e300c1a087a524a7eb38788be25a9b04aef181c937ad27778aac58760bf"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_stacktrace.so.20210324"
+sha256 = "78757b028e75af23e756e4217193d4114fd3ffc9d356dd81462c173b22f51b8a"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_stacktrace.so.20210324.0.0"
+sha256 = "78757b028e75af23e756e4217193d4114fd3ffc9d356dd81462c173b22f51b8a"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_status.so.20210324"
+sha256 = "4d61ac6b0fe71b963d0b07d37eaf89421407d0d1925b471f50f7f6a4b90b6d17"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_status.so.20210324.0.0"
+sha256 = "4d61ac6b0fe71b963d0b07d37eaf89421407d0d1925b471f50f7f6a4b90b6d17"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_statusor.so.20210324"
+sha256 = "80d94061ffa2158785b88e224847ebf3506feac2021e725dec213592248d4109"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_statusor.so.20210324.0.0"
+sha256 = "80d94061ffa2158785b88e224847ebf3506feac2021e725dec213592248d4109"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_str_format_internal.so.20210324"
+sha256 = "8c2d98396f8224bdfa3eb6302dda4fe3eca89a1e64d7617c9eee5846ade445fe"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_str_format_internal.so.20210324.0.0"
+sha256 = "8c2d98396f8224bdfa3eb6302dda4fe3eca89a1e64d7617c9eee5846ade445fe"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_strerror.so.20210324"
+sha256 = "422bcdf400e5796d6365ecf1582a455337c931ea96a35333ef680c2facd35b68"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_strerror.so.20210324.0.0"
+sha256 = "422bcdf400e5796d6365ecf1582a455337c931ea96a35333ef680c2facd35b68"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_strings.so.20210324"
+sha256 = "417050158b35cfffb52c661827e57fb60624d8dd1b259ddfa03357bbff02c4d6"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_strings.so.20210324.0.0"
+sha256 = "417050158b35cfffb52c661827e57fb60624d8dd1b259ddfa03357bbff02c4d6"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_strings_internal.so.20210324"
+sha256 = "8fadb77653dddd88f67080a2cd3e4fd5d1c9b1f4f8fcefeb4146afc267054305"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_strings_internal.so.20210324.0.0"
+sha256 = "8fadb77653dddd88f67080a2cd3e4fd5d1c9b1f4f8fcefeb4146afc267054305"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_symbolize.so.20210324"
+sha256 = "e7b3b889aff39169ff59350950b8d8faaf6bf4fd37398de6bd81321c41dac457"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_symbolize.so.20210324.0.0"
+sha256 = "e7b3b889aff39169ff59350950b8d8faaf6bf4fd37398de6bd81321c41dac457"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_synchronization.so.20210324"
+sha256 = "8bc4c584092e3ff1cd296b9e1aa21e399a87b02b0e9b9ea31dd80d6968a58404"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_synchronization.so.20210324.0.0"
+sha256 = "8bc4c584092e3ff1cd296b9e1aa21e399a87b02b0e9b9ea31dd80d6968a58404"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_throw_delegate.so.20210324"
+sha256 = "365042fc27a355d90eb87776244f35c8497e3dc1a7e9525c4a81a975f1c8dacf"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_throw_delegate.so.20210324.0.0"
+sha256 = "365042fc27a355d90eb87776244f35c8497e3dc1a7e9525c4a81a975f1c8dacf"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_time.so.20210324"
+sha256 = "b2206b6a68845590c6bab78d0e8fed0bde1ce3abe2bde10da5957439dbda2301"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_time.so.20210324.0.0"
+sha256 = "b2206b6a68845590c6bab78d0e8fed0bde1ce3abe2bde10da5957439dbda2301"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_time_zone.so.20210324"
+sha256 = "8827235337ec6a69593c7ae23e41bc3c05ed6e992337f005efa421f510aa4456"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_time_zone.so.20210324.0.0"
+sha256 = "8827235337ec6a69593c7ae23e41bc3c05ed6e992337f005efa421f510aa4456"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_wyhash.so.20210324"
+sha256 = "6a05522a5eadefd3e47ac94172eac5b89026d08ed76dd6898ed74c5a27b07312"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libabsl_wyhash.so.20210324.0.0"
+sha256 = "6a05522a5eadefd3e47ac94172eac5b89026d08ed76dd6898ed74c5a27b07312"
+
+[[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libacl.so.1"
 sha256 = "b35d4bbf00844a585e02502b8a1db17b740a0127e2fb9a4428a83eaa0f23be65"
 
 [[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libacl.so.1.1.2301"
 sha256 = "b35d4bbf00844a585e02502b8a1db17b740a0127e2fb9a4428a83eaa0f23be65"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libaddress_sorting.so.10"
+sha256 = "3260c7410fa25053690a004c1ea0fa68508d0d9cd5d0fd2b789a32caac0150f8"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libaddress_sorting.so.10.0.0"
+sha256 = "3260c7410fa25053690a004c1ea0fa68508d0d9cd5d0fd2b789a32caac0150f8"
 
 [[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libaio.so.1"
@@ -4576,6 +5076,34 @@ uri = "file:/lib/x86_64-linux-gnu/libbz2.so.1.0.4"
 sha256 = "5e516f77fc36dd924fdf02c8489a217f55fa1548883d32c3a5e041fb25d47d6e"
 
 [[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libc++.a"
+sha256 = "ebd5c9b9fb457601ddc583a090866a9960dbf5b2f5e7cb527f05492874c343b4"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libc++.so"
+sha256 = "9e25bf5243e70dfae2a8590e8e5e87752b03bea73ac372833c6f47c7c8ac5f46"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libc++.so.1"
+sha256 = "71bc274ca950669587d6be0608e9a17c5e37bd8e1b86d4492cdebecf030a51f0"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libc++.so.1.0"
+sha256 = "71bc274ca950669587d6be0608e9a17c5e37bd8e1b86d4492cdebecf030a51f0"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libc++abi.so"
+sha256 = "0539aa514f8e91cbbb752015ab4f8ded5b0960ef6806f6eacaaa66ab8388a22a"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libc++abi.so.1"
+sha256 = "0539aa514f8e91cbbb752015ab4f8ded5b0960ef6806f6eacaaa66ab8388a22a"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libc++abi.so.1.0"
+sha256 = "0539aa514f8e91cbbb752015ab4f8ded5b0960ef6806f6eacaaa66ab8388a22a"
+
+[[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libc.a"
 sha256 = "05fcc6ae65569066572bd76ee223a7534808ac8019d1b52f107476226e652337"
 
@@ -4616,6 +5144,14 @@ uri = "file:/lib/x86_64-linux-gnu/libcap.so.2.44"
 sha256 = "4b576cb3a0b828c26648a0afce067f9583f1c87ddcd5acca9471b59e5bd52934"
 
 [[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libcares.so.2"
+sha256 = "7b97940782fdb3b62fe50456d512ecf27b0145227b4c89c9e3913f36bca69c37"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libcares.so.2.5.1"
+sha256 = "7b97940782fdb3b62fe50456d512ecf27b0145227b4c89c9e3913f36bca69c37"
+
+[[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libcbor.so.0.8"
 sha256 = "9a8f9884ac1aca7898b40c60a6cf5708139dffda6554ee88267c6cef84151a83"
 
@@ -4644,8 +5180,48 @@ uri = "file:/lib/x86_64-linux-gnu/libclang-14.so.14.0.0"
 sha256 = "7d33f06ae903a2cdfada29672a0f19ae82353f7e0c6e74c66a21b1e4aba219c5"
 
 [[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libclang-17.so"
+sha256 = "96bc67c40fd1527f2168da2a34631c4e0cc799e97b30d2f6e4bca43861205670"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libclang-17.so.1"
+sha256 = "96bc67c40fd1527f2168da2a34631c4e0cc799e97b30d2f6e4bca43861205670"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libclang-17.so.17"
+sha256 = "96bc67c40fd1527f2168da2a34631c4e0cc799e97b30d2f6e4bca43861205670"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libclang-17.so.17.0.4"
+sha256 = "96bc67c40fd1527f2168da2a34631c4e0cc799e97b30d2f6e4bca43861205670"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libclang-17.so.17.0.5"
+sha256 = "96bc67c40fd1527f2168da2a34631c4e0cc799e97b30d2f6e4bca43861205670"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libclang-18.so"
+sha256 = "0355216bc0f66f4b1cf64245918f60c50234e4c6de1945383a9353d9732d6924"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libclang-18.so.1"
+sha256 = "0355216bc0f66f4b1cf64245918f60c50234e4c6de1945383a9353d9732d6924"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libclang-18.so.18"
+sha256 = "0355216bc0f66f4b1cf64245918f60c50234e4c6de1945383a9353d9732d6924"
+
+[[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libclang-cpp.so.14"
 sha256 = "3f913de9188588a5c04240f6814a6d3020f6a1075e956fb59f680e6a4958ccd1"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libclang-cpp.so.17"
+sha256 = "32d430ebff126fa3e5b65021e33516d5d23afd8809f05faa6b9bd030e0298cda"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libclang-cpp.so.18"
+sha256 = "31f67db553abc66f8a7f6d2094d9bb7774b80266f8bf73891d51112bd78ded9e"
 
 [[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libcom_err.so.2"
@@ -4774,6 +5350,14 @@ sha256 = "a3d53f7215af9860f3466b94cd8fe3e95c253c46df164dea62af9b9def93dcea"
 [[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libdbus-1.so.3.19.13"
 sha256 = "a3d53f7215af9860f3466b94cd8fe3e95c253c46df164dea62af9b9def93dcea"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libdbus-glib-1.so.2"
+sha256 = "7ac4ef6ed7a8d45dd83bfce8f3339876dc97a532771086df2f8a2dcd56256a05"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libdbus-glib-1.so.2.3.5"
+sha256 = "7ac4ef6ed7a8d45dd83bfce8f3339876dc97a532771086df2f8a2dcd56256a05"
 
 [[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libdcap_quoteprov.so.1"
@@ -4918,6 +5502,14 @@ sha256 = "5a02ce8f43c1a033fe28c2b05b46e9d08ec48dda095414ab1bb8132cc3b3d9de"
 [[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libestr.so.0.0.0"
 sha256 = "5a02ce8f43c1a033fe28c2b05b46e9d08ec48dda095414ab1bb8132cc3b3d9de"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libevdev.so.2"
+sha256 = "9699894e6afae47dc72717448456c9fff8c42747911aa5ce73eaede9bbbbb0ee"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libevdev.so.2.3.0"
+sha256 = "9699894e6afae47dc72717448456c9fff8c42747911aa5ce73eaede9bbbbb0ee"
 
 [[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libevent_core-2.1.so.7"
@@ -5332,6 +5924,86 @@ uri = "file:/lib/x86_64-linux-gnu/libgpm.so.2"
 sha256 = "9640ab708102bf336b55f311ad6d7cfb0515f5144bdb4ac0813a2c7744e8107a"
 
 [[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgpr.so.10"
+sha256 = "a24da185a13d49e17cd5f327713984f5796454ba11b15840256c8b664374fba7"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgpr.so.10.0.0"
+sha256 = "a24da185a13d49e17cd5f327713984f5796454ba11b15840256c8b664374fba7"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgrpc++.so.1"
+sha256 = "4799f3bb63c3aee964a401d3b0cd74f314a54db239e50666d7a186dfdf304f6a"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgrpc++.so.1.30.2"
+sha256 = "4799f3bb63c3aee964a401d3b0cd74f314a54db239e50666d7a186dfdf304f6a"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgrpc++_alts.so.1"
+sha256 = "33e818e2b410b1f0c3631463547662801a78ccbe785606433419cc77acd07586"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgrpc++_alts.so.1.30.2"
+sha256 = "33e818e2b410b1f0c3631463547662801a78ccbe785606433419cc77acd07586"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgrpc++_error_details.so.1"
+sha256 = "f2986ba3ef6caa7936be94e7e4c4a527d72cc79d6fd342fe369dbe1e80f1b2c5"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgrpc++_error_details.so.1.30.2"
+sha256 = "f2986ba3ef6caa7936be94e7e4c4a527d72cc79d6fd342fe369dbe1e80f1b2c5"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgrpc++_reflection.so.1"
+sha256 = "5cd6f7f471e3ee6f3cbe9086437e025103cdda21e5da2a57f1a01fe2c9cf1719"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgrpc++_reflection.so.1.30.2"
+sha256 = "5cd6f7f471e3ee6f3cbe9086437e025103cdda21e5da2a57f1a01fe2c9cf1719"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgrpc++_unsecure.so.1"
+sha256 = "673c0a17c26aca055bfa03ea60f626b7e54ce96d7554c598b13a4f9819b639e5"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgrpc++_unsecure.so.1.30.2"
+sha256 = "673c0a17c26aca055bfa03ea60f626b7e54ce96d7554c598b13a4f9819b639e5"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgrpc.so.10"
+sha256 = "cda85696305e942e854f704874b5fd671fc6767b0c566ac3f78f0aceca1107ce"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgrpc.so.10.0.0"
+sha256 = "cda85696305e942e854f704874b5fd671fc6767b0c566ac3f78f0aceca1107ce"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgrpc_csharp_ext.so.10"
+sha256 = "be4231e5a0cec7e3ade65e49fbe10ba44ea376d19d569951c8e401c2f57462cc"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgrpc_csharp_ext.so.10.0.0"
+sha256 = "be4231e5a0cec7e3ade65e49fbe10ba44ea376d19d569951c8e401c2f57462cc"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgrpc_unsecure.so.10"
+sha256 = "d6cfa808842a2fc491d54a6acd47eb7e50b786fa4839913fb3efb2c24584f39f"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgrpc_unsecure.so.10.0.0"
+sha256 = "d6cfa808842a2fc491d54a6acd47eb7e50b786fa4839913fb3efb2c24584f39f"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgrpcpp_channelz.so.1"
+sha256 = "96936ccbc5900e8f006a81bc1994d26e5d7c405aeedef3b9152fd41bb59a8810"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libgrpcpp_channelz.so.1.30.2"
+sha256 = "96936ccbc5900e8f006a81bc1994d26e5d7c405aeedef3b9152fd41bb59a8810"
+
+[[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libgsasl.so.7"
 sha256 = "4c7eb66fce61dd322882f1176b49f90d35c50037e1acd2eb5667afb8e6e91ac1"
 
@@ -5640,6 +6312,22 @@ uri = "file:/lib/x86_64-linux-gnu/libidn2.so.0.3.7"
 sha256 = "1420c60a18189fb2e7bb4b8da1409564b0c1c46c59df5bbb0c23339bb961403a"
 
 [[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libimobiledevice-1.0.so.6"
+sha256 = "052514a3534e5e36e8af0e3abec71928bc40f47da625cbce33e076e43eec13c3"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libimobiledevice-1.0.so.6.0.0"
+sha256 = "052514a3534e5e36e8af0e3abec71928bc40f47da625cbce33e076e43eec13c3"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libimobiledevice.so.6"
+sha256 = "052514a3534e5e36e8af0e3abec71928bc40f47da625cbce33e076e43eec13c3"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libimobiledevice.so.6.0.0"
+sha256 = "052514a3534e5e36e8af0e3abec71928bc40f47da625cbce33e076e43eec13c3"
+
+[[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libinih.so.1"
 sha256 = "cb228e0a9383391be72ee258e8841af7aba9bb6cf3a32e2286719cac00b6c881"
 
@@ -5810,6 +6498,14 @@ sha256 = "24e60f72e8b40c48e35888b54e311099e7d40ca80f240ce70f41ed74ede2510b"
 [[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libldap-2.5.so.0.1.11"
 sha256 = "24e60f72e8b40c48e35888b54e311099e7d40ca80f240ce70f41ed74ede2510b"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/liblldb-18.so"
+sha256 = "5e25ca96d5126e679ee6954211603269dc4f85fc0f35ddfd60cd95bb867ce02a"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/liblldb-18.so.1"
+sha256 = "5e25ca96d5126e679ee6954211603269dc4f85fc0f35ddfd60cd95bb867ce02a"
 
 [[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/liblmdb.so.0"
@@ -6660,6 +7356,22 @@ uri = "file:/lib/x86_64-linux-gnu/libplds4.so"
 sha256 = "80b0d2e47ec5e63fb41f4df636e7b25b807e8d6a02b23d9bc0eb41f45ce209c3"
 
 [[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libplist-2.0.so.3"
+sha256 = "f1009ca7a73f65b8283689b0626e9b3e6eb7270132aed16772306f3c501c146a"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libplist-2.0.so.3.3.0"
+sha256 = "f1009ca7a73f65b8283689b0626e9b3e6eb7270132aed16772306f3c501c146a"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libplist.so.3"
+sha256 = "f1009ca7a73f65b8283689b0626e9b3e6eb7270132aed16772306f3c501c146a"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libplist.so.3.3.0"
+sha256 = "f1009ca7a73f65b8283689b0626e9b3e6eb7270132aed16772306f3c501c146a"
+
+[[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libply-boot-client.so.5"
 sha256 = "8a7c48ec7283361efcac2cb2b339769eec6fd53aa40953d6497369b0df70f314"
 
@@ -7504,12 +8216,36 @@ uri = "file:/lib/x86_64-linux-gnu/libunwind-x86_64.so.8.0.1"
 sha256 = "1077e265bdd76ed4f2d628ea29150eb98f5c7c8f5a30004a561e6e93a2a6f097"
 
 [[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libunwind.a"
+sha256 = "33fb4fdea2b1a84985531a9dc9f4eb5b731b04feb9354cb7ca787e2d6693fd46"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libunwind.so"
+sha256 = "6b740a46b01921c4c1e24df2807cb0cf1c399862aaedb5bd39fa806fcf80c031"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libunwind.so.1"
+sha256 = "6b740a46b01921c4c1e24df2807cb0cf1c399862aaedb5bd39fa806fcf80c031"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libunwind.so.1.0"
+sha256 = "6b740a46b01921c4c1e24df2807cb0cf1c399862aaedb5bd39fa806fcf80c031"
+
+[[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libunwind.so.8"
 sha256 = "5d1f6f104f79698e137c9f17c4b0317dfd96816c0eb6a87c50619a41472ca382"
 
 [[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libunwind.so.8.0.1"
 sha256 = "5d1f6f104f79698e137c9f17c4b0317dfd96816c0eb6a87c50619a41472ca382"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libupower-glib.so.3"
+sha256 = "0010191c0e54e0f0470c53f8884ca18b2e96f4b47b88a4c63f155629f50e37e4"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libupower-glib.so.3.1.0"
+sha256 = "0010191c0e54e0f0470c53f8884ca18b2e96f4b47b88a4c63f155629f50e37e4"
 
 [[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/liburcu-bp.so.8"
@@ -7582,6 +8318,22 @@ sha256 = "919e7ca7633bde351a097843638d1871c497211626e6c355140e898e61d2a84c"
 [[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libusb-1.0.so.0.3.0"
 sha256 = "919e7ca7633bde351a097843638d1871c497211626e6c355140e898e61d2a84c"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libusbmuxd-2.0.so.6"
+sha256 = "3ee2c74a9a211721e96dcb7648bb8294199061d9236a6fa43ff65384dfd2cb89"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libusbmuxd-2.0.so.6.0.0"
+sha256 = "3ee2c74a9a211721e96dcb7648bb8294199061d9236a6fa43ff65384dfd2cb89"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libusbmuxd.so.6"
+sha256 = "3ee2c74a9a211721e96dcb7648bb8294199061d9236a6fa43ff65384dfd2cb89"
+
+[[sgx.trusted_files]]
+uri = "file:/lib/x86_64-linux-gnu/libusbmuxd.so.6.0.0"
+sha256 = "3ee2c74a9a211721e96dcb7648bb8294199061d9236a6fa43ff65384dfd2cb89"
 
 [[sgx.trusted_files]]
 uri = "file:/lib/x86_64-linux-gnu/libutempter.so.0"
@@ -13145,15 +13897,11 @@ sha256 = "9a89b0779e1cd87d9bd44013c7b10554052653c33e9e8a8a3c4adf55f2d2d7ac"
 
 [[sgx.trusted_files]]
 uri = "file:config/config.yaml"
-sha256 = "362a6db3be6e7c9b33c14cc541e61e3020bb59fe05f0f6be33ea0a3695565896"
+sha256 = "81c9745a646e703e0a9c3456e3a734ac66af93feb394fea74efaacb742f6a98e"
 
 [[sgx.trusted_files]]
 uri = "file:fixture/notary/notary.key"
 sha256 = "00c5eaa710ce03f2ad4f6ad5915ea6ce56b76502ec09612eda267b8cbe5c44ee"
-
-[[sgx.trusted_files]]
-uri = "file:/tmp/crt.pem"
-sha256 = "508de6d05fb75d0351e8ce0aa3b4b4e8bb046c99af8b3631f36e7bd3742f3a44"
 
 [[sgx.trusted_files]]
 uri = "file:fixture/notary/notary.pub"
@@ -13165,35 +13913,7 @@ sha256 = "d45d089b970eaf1968355249065c1c5faf23b2e8f4f5f6f8a521da9bfb5b0a4f"
 
 [[sgx.trusted_files]]
 uri = "file:fixture/tls/notary.crt"
-sha256 = "ee859f7130fa5e7f321dec1ef2580f9696db5722f83a0bdd2e435e3658d231fd"
-
-[[sgx.trusted_files]]
-uri = "file:fixture/tls/notary.csr"
-sha256 = "2110c233c4e0c01d24022fa28c2af7916f0b3521876ac160d84c94f49b9028a1"
-
-[[sgx.trusted_files]]
-uri = "file:fixture/tls/notary.ext"
-sha256 = "49f683ed97122207dea841a62e262eb40d2bc03563c02703d2e19080f8dc8110"
-
-[[sgx.trusted_files]]
-uri = "file:fixture/tls/pkcs8.pem"
-sha256 = "0a413f63d7fdb0c48062d6c76db9ed06213840fbbf5b795cd5cb08994efe5641"
-
-[[sgx.trusted_files]]
-uri = "file:fixture/tls/rootCA.crt"
-sha256 = "5ad342ccf9e6bb8dc108b3a60dc32bd1495a0af514d9d7fb6a1c79aa67eb9f4e"
-
-[[sgx.trusted_files]]
-uri = "file:fixture/tls/rootCA.key"
-sha256 = "6a89e4a2d5299d4f581768cea08c4daa4cce0dd8eef6b604155d8aed61ce4194"
-
-[[sgx.trusted_files]]
-uri = "file:fixture/tls/rootCA.srl"
-sha256 = "deebc0d61b9046c25423b95871cc782681dc5e0f62b304bfdc629ea5dd3750bb"
-
-[[sgx.trusted_files]]
-uri = "file:/home/ecs-user/sgx-tlsn-notary-server/target/release/sgx-notary-server"
-sha256 = "2bcd7e9526d6d9e3c8c6377d56732668e0e5c09d8d7612273a85c16b2fef73ed"
+sha256 = "2f62ffe9e8fdc34b7cdeeb84a830241ad49231d43700cf55088de4f707dc0a6c"
 
 [sgx.cpu_features]
 avx = "unspecified"

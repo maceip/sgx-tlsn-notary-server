@@ -31,7 +31,7 @@ sgx-notary-server.manifest: sgx-notary-server.manifest.template
 		-Dlog_level=$(GRAMINE_LOG_LEVEL) \
 		-Darch_libdir=$(ARCH_LIBDIR) \
                 -Dself_exe=$(SELF_EXE) \
-		$< >$@
+		$< $@
 
 # Make on Ubuntu <= 20.04 doesn't support "Rules with Grouped Targets" (`&:`),
 # see the helloworld example for details on this workaround.
