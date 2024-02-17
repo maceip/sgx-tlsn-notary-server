@@ -8,6 +8,11 @@ build:
 SGX=1 make
 ```
 
+run the notary server:
+```bash
+gramine-sgx sgx-notary-server
+```
+
 then use the generated Gramine RATLS Root CA certificate from `fixture/tls/gramine_crt.pem` in your prover:
 ```env
 GRAMINE_ROOTCA=/home/gg/sgx-tlsn-notary-server/fixture/tls/gramine_crt.pem
@@ -26,10 +31,7 @@ pub async fn request_notarization(
     .unwrap();
 ```
 
-run the notary server:
-```bash
-gramine-sgx sgx-notary-server
-```
+
 
 run a prover:
 ```bash
