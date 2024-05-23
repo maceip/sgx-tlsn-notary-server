@@ -1,3 +1,4 @@
+#![allow(unused)]
 use std::{
     error::Error,
     io::{self, Read},
