@@ -8,7 +8,7 @@ edition = "2021"
 
 [dependencies]
 tokio = { version = "1", features = ["full"] }
-log = {}
+log = "0.4.22"
 openssl = { version = "0.10", features = ["vendored"] }
 rustls = "0.22.2"
 eyre = "0.6.8"
